@@ -1,0 +1,8 @@
+{
+  "server_address": "0.0.0.0",
+  "server_port": 8388,
+  "password": "",
+  "method": "chacha20-ietf-poly1305",
+  "max_connection_thread": 128,
+  "max_client_connection_thread": 16
+}

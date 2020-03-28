@@ -1,0 +1,60 @@
+<assembly xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+    <id>bundle-tar</id>
+    <formats>
+        <format>tar.gz</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+
+    <files>
+        <!-- executables scripts-->
+        <file>
+            <source>src/main/scripts/startup.sh</source>
+            <outputDirectory>bin</outputDirectory>
+            <fileMode>0755</fileMode>
+        </file>
+
+        <file>
+            <source>src/main/resources/config.json</source>
+            <outputDirectory>conf/</outputDirectory>
+            <destName>config.json</destName>
+        </file>
+
+        <file>
+            <source>src/main/resources/logback.xml</source>
+            <outputDirectory>conf/</outputDirectory>
+            <destName>logback.xml</destName>
+        </file>
+
+        <file>
+            <source>../shadowsocks-transport/target/shadowsocks-transport-${project.version}.jar</source>
+            <outputDirectory>lib/</outputDirectory>
+            <destName>shadowsocks-transport-${project.version}.jar</destName>
+        </file>
+
+        <file>
+            <source>../shadowsocks-crypto/target/shadowsocks-crypto-${project.version}.jar</source>
+            <outputDirectory>plugin/</outputDirectory>
+            <destName>shadowsocks-crypto-${project.version}.jar</destName>
+        </file>
+
+        <file>
+            <source>../LICENSE</source>
+            <outputDirectory>/</outputDirectory>
+            <destName>LICENSE</destName>
+        </file>
+
+    </files>
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>lib/</outputDirectory>
+            <useProjectArtifact>true</useProjectArtifact> <!-- avoid inclusion of the artifact itself -->
+            <excludes>
+                <exclude>io.github.rpcheung:shadowsocks-bundle</exclude>
+                <exclude>io.github.rpcheung:shadowsocks-crypto</exclude>
+                <exclude>org.codehaus.groovy:groovy-all</exclude>
+            </excludes>
+        </dependencySet>
+    </dependencySets>
+</assembly>
