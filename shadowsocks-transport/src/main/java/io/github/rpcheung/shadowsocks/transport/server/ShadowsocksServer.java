@@ -15,10 +15,13 @@ import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.util.internal.SocketUtils;
 import lombok.extern.slf4j.Slf4j;
+import sun.misc.Signal;
+import sun.misc.SignalHandler;
 
 import java.net.InetSocketAddress;
 
 @Slf4j
+@SuppressWarnings("restriction")
 public class ShadowsocksServer {
 
     private final ServerBootstrap bootstrap = new ServerBootstrap();
@@ -35,16 +38,19 @@ public class ShadowsocksServer {
         SSContextUtils.CONTEXT.putAttribute("eventExecutors",
                 new EpollEventLoopGroup(config.getMaxConnectionThread()));
         SSContextUtils.CONTEXT.putAttribute("config", config);
+
+        Signal.handle(new Signal("KILL"), signal -> stop());
+        Signal.handle(new Signal("TERM"), signal -> stop());
     }
 
 
-    private EventLoopGroup bossGroup;
+    private static EventLoopGroup bossGroup;
 
 
-    private EventLoopGroup workerGroup;
+    private static EventLoopGroup workerGroup;
 
 
-    private EventLoopGroup eventExecutors;
+    private static EventLoopGroup eventExecutors;
 
     public void start() {
         try {
@@ -77,7 +83,7 @@ public class ShadowsocksServer {
         }
     }
 
-    public void stop() {
+    public static void stop() {
         try {
             bossGroup.shutdownGracefully().sync();
             workerGroup.shutdownGracefully().sync();
